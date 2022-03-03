@@ -39,21 +39,23 @@ class Person {
 
         var tbody = document.getElementById('tbody');
         var tr = document.createElement('tr');
-        tr.setAttribute('class', `tr${Person.id}`);
+        tr.setAttribute('id', `tr${Person.id}`);
         tbody.appendChild(tr)
 
         for (var i = 0; i <= 6; i++) {
             var td = document.createElement('td');
             if(i == 6) {
-                td.innerHTML = `<button type="button" class="btn btn-danger" name=${Person.id}>Delete</button>`
+                td.innerHTML = `<button type="button" class="btn btn-danger" id="delete${Person.id}">Delete</button>`
                 tr.appendChild(td)
             } else if (i == 5) {
                 td.innerHTML = `<select class="form-control" id="bookSelect${Person.id}">`
                 tr.appendChild(td)
-                subjectInfo[i] = subjectInfo[i].value.split(',')
+                subjectInfo[i] = subjectInfo[i].value.split(',');
+
                 for (var j = 0; j < subjectInfo[i].length; j++){
+                    subjectInfo[i][j] = subjectInfo[i][j].replace(/\s/g, "")
                     var bookSelect = document.getElementById(`bookSelect${Person.id}`)
-                    bookSelect.innerHTML += `<option>${subjectInfo[i][j]}</option>`
+                    bookSelect.innerHTML += `<option id="${Person.id}${subjectInfo[i][j]}">${subjectInfo[i][j]}</option>`
                 }
                 tr.appendChild(td)
             }
@@ -63,10 +65,20 @@ class Person {
             }
         }
 
-        document.getElementById()
+        document.getElementById(`delete${Person.id}`).addEventListener('click', (evit) => person.deleteBook(person.id))
         Person.incrementId();
     }
 
+    deleteBook(id) {
+        var select = document.getElementById(`bookSelect${id}`);
+        console.log(select.value)
+        console.log(id)
+        document.getElementById(id + select.value).remove()
+        if(select.hasChildNodes() == false) {
+            document.getElementById(`tr${id}`).remove()
+        }
+    }
+    
     static incrementId() {
         this.id += 1;
     }
